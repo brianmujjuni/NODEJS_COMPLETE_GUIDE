@@ -3,7 +3,7 @@ html(lang="en")
     head
         meta(charset="UTF-8")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Shop
+        title #{prodTitle}
         link(rel="stylesheet", href="/css/main.css")
         link(rel="stylesheet", href="/css/product.css")
     body 
@@ -14,3 +14,21 @@ html(lang="en")
                         a.active(href="/") Shop
                     li.main-header__item    
                         a(href="/add-product") Add Product
+        main
+            if products.length > 0
+                .grid 
+                    each product in products 
+                        article.card.product-item
+                            header.card__header 
+                                h1.product__title #{product.name}
+                            .card__image
+                                img(src="", alt="")
+                            .card_content 
+                                h2.product__price $19.99
+                                p.product__description #{product.description}
+                            .card_actions 
+                                button.btn Add to acrt
+            else 
+                h1 No Products
+
+
