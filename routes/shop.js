@@ -30,6 +30,6 @@ router.get("/", (req, res) => {
       numReviews: 8,
     },
   ];
-  res.render("shop", { products, prodTitle: "Automex" });
+  res.render("shop", { products, pageTitle: "Automex", path: "/" });
 });
 module.exports = router;
