@@ -30,6 +30,12 @@ router.get("/", (req, res) => {
       numReviews: 8,
     },
   ];
-  res.render("shop", { products, pageTitle: "Automex", path: "/" });
+  res.render("shop", {
+    products,
+    pageTitle: "Automex",
+    path: "/",
+    formsCSS: true,
+    activeShop: true,
+  });
 });
 module.exports = router;

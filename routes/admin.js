@@ -4,7 +4,11 @@ const rootDir = require("../uitl/path");
 const router = express.Router();
 
 router.get("/add-product", (req, res) => {
-  res.render("add-product", { pageTitle: "Add Product", path: "/add-product" });
+  res.render("add-product", {
+    pageTitle: "Add Product",
+    path: "/add-product",
+    productCSS: true,
+  });
 });
 
 router.post("/product", (req, res) => {
