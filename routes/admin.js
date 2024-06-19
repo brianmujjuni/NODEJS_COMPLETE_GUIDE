@@ -1,20 +1,15 @@
-const express = require("express");
-const path = require("path");
-const rootDir = require("../uitl/path");
+const path = require('path');
+
+const express = require('express');
+
+const productsController = require('../controllers/products');
+
 const router = express.Router();
 
-router.get("/add-product", (req, res) => {
-  res.render("add-product", {
-    pageTitle: "Add Product",
-    path: "/add-product",
-    productCSS: true,
-  });
-});
+// /admin/add-product => GET
+router.get('/add-product', productsController.getAddProduct);
 
-router.post("/product", (req, res) => {
-  const { title } = req.body;
-  res.status(201).json({
-    title,
-  });
-});
+// /admin/add-product => POST
+router.post('/add-product', productsController.postAddProduct);
+
 module.exports = router;
