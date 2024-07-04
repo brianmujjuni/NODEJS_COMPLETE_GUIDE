@@ -1,5 +1,5 @@
 const Cart = require("./cart");
-
+const db = require("../uitl/database");
 module.exports = class Product {
   constructor(id, title, imageUrl, description, price) {
     this.id = id;
@@ -13,7 +13,9 @@ module.exports = class Product {
 
   static deleteById(id) {}
 
-  static fetchAll() {}
+  static fetchAll() {
+    return db.execute("SELECT * FROM products");
+  }
 
   static findById(id) {}
 };
