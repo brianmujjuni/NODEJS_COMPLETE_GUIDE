@@ -11,15 +11,9 @@ module.exports = class Product {
 
   save() {}
 
-  static deleteById(id) {
-   
-  }
+  static deleteById(id) {}
 
-  static fetchAll(cb) {
-    
-  }
+  static fetchAll() {}
 
-  static findById(id, cb) {
-    
-  }
+  static findById(id) {}
 };
