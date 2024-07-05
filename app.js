@@ -4,7 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const errorController = require("./controllers/error");
-const db = require("./uitl/database");
+const sequelize = require("./uitl/database");
 
 const app = express();
 
@@ -21,5 +21,14 @@ app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
 app.use(errorController.get404);
+
+sequelize
+  .sync()
+  .then((result) => {
+    console.log("connection created");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 app.listen(3000);
