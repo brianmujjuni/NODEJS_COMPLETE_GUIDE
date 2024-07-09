@@ -19,6 +19,15 @@ const shopRoutes = require("./routes/shop");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+//add user to every route or request
+app.use((req, res, next) => {
+  User.findByPk(1)
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log(err));
+});
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
@@ -30,12 +39,25 @@ User.hasMany(Product);
 
 sequelize
   //force isn't recommended in production
-  .sync({ force: true })
+  // .sync({ force: true })
+  .sync()
   .then((result) => {
-    console.log("connection created");
+    return User.findByPk(1);
+    // console.log("connection created");
+  })
+  .then((user) => {
+    if (!user) {
+      return User.create({
+        name: "Brian Mujjuni",
+        email: "brianmujjuni@gmail.com.com",
+      });
+    }
+    return user;
+  })
+  .then((user) => {
+    // console.log(user);
+    app.listen(3000);
   })
   .catch((err) => {
     console.log(err);
   });
-
-app.listen(3000);
