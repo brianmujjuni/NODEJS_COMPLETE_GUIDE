@@ -107,10 +107,9 @@ exports.postCartDeleteProduct = (req, res, next) => {
     })
     .catch((error) => console.log(error));
 };
-
 exports.getOrders = (req, res, next) => {
   req.user
-    .getOrders()
+    .getOrders({ include: ["products"] })
     .then((orders) => {
       res.render("shop/orders", {
         path: "/orders",
@@ -118,8 +117,9 @@ exports.getOrders = (req, res, next) => {
         orders: orders,
       });
     })
-    .catch((error) => console.log(error));
+    .catch((err) => console.log(err));
 };
+
 
 exports.getCheckout = (req, res, next) => {
   res.render("shop/checkout", {
