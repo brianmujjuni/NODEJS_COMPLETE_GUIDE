@@ -1,12 +1,14 @@
 const mongodb = require("mongodb");
 const getDb = require("../uitl/database").getDb;
 
-const ObjectId = new mongodb.ObjectId();
+const ObjectId = mongodb.ObjectId;
+
 class User {
   constructor(username, email) {
-    this.username = username;
+    this.name = username;
     this.email = email;
   }
+
   save() {
     const db = getDb();
     return db.collection("users").insertOne(this);
@@ -14,7 +16,16 @@ class User {
 
   static findById(userId) {
     const db = getDb();
-    return db.collection("users").findOne({ _id: new ObjectId(userId) });
+    return db
+      .collection("users")
+      .findOne({ _id: new ObjectId(userId) })
+      .then((user) => {
+        console.log(user);
+        return user;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 }
 
