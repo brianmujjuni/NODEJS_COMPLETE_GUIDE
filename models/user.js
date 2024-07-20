@@ -4,9 +4,10 @@ const getDb = require("../uitl/database").getDb;
 const ObjectId = mongodb.ObjectId;
 
 class User {
-  constructor(username, email) {
+  constructor(username, email, cart) {
     this.name = username;
     this.email = email;
+    this.cart = cart;
   }
 
   save() {
@@ -26,6 +27,19 @@ class User {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  addToCart(product) {
+    const db = getDb();
+    const updatedCart = {
+      items: [{ productId: new ObjectId(product._id), quantity: 1 }],
+    };
+    return db
+      .collection("users")
+      .updateOne(
+        { _id: new ObjectId(this._id) },
+        { $set: { cart: updatedCart } }
+      );
   }
 }
 
