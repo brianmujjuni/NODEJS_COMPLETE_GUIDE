@@ -73,6 +73,7 @@ exports.postCartDeleteProduct = (req, res, next) => {
     .catch((error) => console.log(error));
 };
 exports.getOrders = (req, res, next) => {
+  
   req.user
     .getOrders()
     .then((orders) => {

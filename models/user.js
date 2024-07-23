@@ -1,3 +1,4 @@
+const { name } = require("ejs");
 const mongodb = require("mongodb");
 const getDb = require("../uitl/database").getDb;
 
@@ -98,6 +99,14 @@ class User {
 
   addOrder() {
     const db = getDb();
+    const order = {
+      items: this.cart.items,
+      user: {
+        _id: new ObjectId(this._id),
+        name: this.name,
+       },
+    };
+
     return db
       .collection("orders")
       .insertOne(this.cart)
@@ -110,6 +119,14 @@ class User {
             { $set: { cart: { items: [] } } }
           );
       });
+  }
+
+  getOders() {
+    const db = getDb();
+    return db
+      .collection("orders")
+      .find({ "user._id": new ObjectId(this._id) })
+      .toArray();
   }
 }
 
