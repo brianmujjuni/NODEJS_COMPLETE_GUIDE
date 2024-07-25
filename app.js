@@ -18,14 +18,14 @@ const shopRoutes = require("./routes/shop");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use((req, res, next) => {
-  User.findById("66995468a53d2cd92a340e21")
-    .then((user) => {
-      req.user = new User(user.name, user.email, user.cart, user._id);
-      next();
-    })
-    .catch((err) => console.log(err));
-});
+// app.use((req, res, next) => {
+//   User.findById("66995468a53d2cd92a340e21")
+//     .then((user) => {
+//       req.user = new User(user.name, user.email, user.cart, user._id);
+//       next();
+//     })
+//     .catch((err) => console.log(err));
+// });
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
@@ -34,7 +34,7 @@ app.use(errorController.get404);
 
 mongoose
   .connect(
-    "mongodb+srv://brian:domain017@ecommerce.nhwnpg9.mongodb.net/?retryWrites=true&w=majority&appName=ecommerce"
+    "mongodb+srv://brian:domain017@ecommerce.nhwnpg9.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=ecommerce"
   )
   .then(() => {
     console.log('connected to db');
