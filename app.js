@@ -3,12 +3,19 @@ const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const session = require('express-session')
+const MongoDBStore = require('connect-mongodb-session')(session)
 
 const errorController = require("./controllers/error");
 
 const User = require("./models/user");
 
+const DB_URI = "mongodb+srv://brian:domain017@ecommerce.nhwnpg9.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=ecommerce"
 const app = express();
+const store = new MongoDBStore({
+  uri: DB_URI,
+  collection: 'sessions'
+
+})
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -39,7 +46,7 @@ app.use(errorController.get404);
 
 mongoose
   .connect(
-    "mongodb+srv://brian:domain017@ecommerce.nhwnpg9.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=ecommerce"
+    DB_URI
   )
   .then(() => {
     User.findOne().then((user) => {
