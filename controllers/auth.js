@@ -5,7 +5,7 @@ exports.getLogin = (req, res, next) => {
   res.render("auth/login", {
     path: "/login",
     pageTitle: "Login",
-    
+    errorMessage: req.flash('error')
   });
 };
 
@@ -22,7 +22,8 @@ exports.postLogin = (req, res, next) => {
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {
-        return res.redirect("/");
+        req.flash('error','Invalid email or password')
+        return res.redirect("/login");
       }
       bcrypt
         .compare(password, user.password)
@@ -30,11 +31,14 @@ exports.postLogin = (req, res, next) => {
           if (result) {
             req.session.isLoggedIn = true;
             req.session.user = user;
-          return req.session.save((err) => {
+              return req.session.save((err) => {
               res.redirect("/");
             });
+          }else{
+            req.flash('error','Invalid email or password')
+            res.redirect("/login");
           }
-          res.redirect("/login");
+         
         })
         .catch((err) => {
           console.log(err);
