@@ -86,6 +86,13 @@ exports.postSignup = (req, res, next) => {
         })
         .then((result) => {
           res.redirect("/login");
+        //  return transporter.sendMail({
+        //     to: email,
+        //     from: "shop@node-complete-guide",
+        //     subject: "Signup successfull",
+        //     html: '<h1>You sussfully signed up !</h1>'
+        //   })
+          
         });
     })
     .catch((err) => console.log(err));
