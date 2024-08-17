@@ -1,21 +1,23 @@
 const bcrypt = require("bcryptjs");
-const nodemailer = require('nodemailer')
-const sendgridTranport = require('nodemialer-sendgrid-transport')
+const nodemailer = require("nodemailer");
+const sendgridTranport = require("nodemialer-sendgrid-transport");
 
 const User = require("../models/user");
 
-const transporter = nodemailer.createTransport(sendgridTranport({
-  auth:{
-    api_key: ""
-  }
-}))
+const transporter = nodemailer.createTransport(
+  sendgridTranport({
+    auth: {
+      api_key: "",
+    },
+  })
+);
 
 exports.getLogin = (req, res, next) => {
-  let message = req.flash('error');
-  if(message.length > 0){
-    message = message[0]
-  }else{
-    message = null
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
   }
   res.render("auth/login", {
     path: "/login",
@@ -25,11 +27,11 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.getSignup = (req, res, next) => {
-  let message = req.flash('error');
-  if(message.length > 0){
-    message = message[0]
-  }else{
-    message = null
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
   }
   res.render("auth/signup", {
     path: "/auth/signup",
@@ -71,7 +73,7 @@ exports.postSignup = (req, res, next) => {
   User.findOne({ email: email })
     .then((userDoc) => {
       if (userDoc) {
-        req.flash('error','user email already exists')
+        req.flash("error", "user email already exists");
         return res.redirect("/singup");
       }
       return bcrypt
@@ -86,13 +88,15 @@ exports.postSignup = (req, res, next) => {
         })
         .then((result) => {
           res.redirect("/login");
-        //  return transporter.sendMail({
-        //     to: email,
-        //     from: "shop@node-complete-guide",
-        //     subject: "Signup successfull",
-        //     html: '<h1>You sussfully signed up !</h1>'
-        //   })
-          
+          //  return transporter.sendMail({
+          //     to: email,
+          //     from: "shop@node-complete-guide",
+          //     subject: "Signup successfull",
+          //     html: '<h1>You sussfully signed up !</h1>'
+          //   })
+        })
+        .catch((err) => {
+          console.log(err);
         });
     })
     .catch((err) => console.log(err));
@@ -102,5 +106,19 @@ exports.postLogout = (req, res, next) => {
   req.session.destroy((err) => {
     console.log(err);
     res.redirect("/");
+  });
+};
+
+exports.getReset = (req, res, next) => {
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render("auth/reset", {
+    path: "/reset",
+    pageTitle: "Reset Password",
+    errorMessage: message,
   });
 };
