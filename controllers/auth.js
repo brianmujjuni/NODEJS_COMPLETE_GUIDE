@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-// const sendgridTranport = require("nodemialer-sendgrid-transport");
+const sendgridTranport = require("nodemailer-sendgrid-transport");
 
 const User = require("../models/user");
 const user = require("../models/user");
@@ -173,8 +173,36 @@ exports.getNewPassword = (req, res, next) => {
         path: "new-password",
         pageTitle: "New Pasword",
         errorMessage: message,
-        userId: result._id.toString()
+        userId: result._id.toString(),
+        passwordToken: token,
       });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.posNewPassword = (req, res, next) => {
+  const { newPassword, userId, passwordToken } = req.body;
+  let resetUser;
+
+  User.findOne({
+    resetToken: passwordToken,
+    resetTokenExpiration: { $gt: Date.now() },
+    _id: userId,
+  })
+    .then((result) => {
+      resetUser = result;
+      return bcrypt.hash(newPassword, 12);
+    })
+    .then((hashedPassword) => {
+      resetUser.password = hashedPassword;
+      resetUser.resetToken = undefined;
+      resetUser.resetTokenExpiration = undefined;
+      return resetUser.save();
+    })
+    .then((result) => {
+      res.redirect("/login");
     })
     .catch((err) => {
       console.log(err);
