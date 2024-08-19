@@ -133,28 +133,50 @@ exports.postReset = (req, res, next) => {
     const token = buffer.toString("hex");
     User.findOne({ email: req.body.email })
       .then((result) => {
-        if(!result){
-          req.flash('error','No account with that email found')
-          return res.redirect('/reset')
+        if (!result) {
+          req.flash("error", "No account with that email found");
+          return res.redirect("/reset");
         }
-        user.resetToken = token
-        user.restTokenExpiration = Date.now() + 3600000
-        return user.save()
-      }).then(result =>{
-        res.redirect('/')
+        user.resetToken = token;
+        user.restTokenExpiration = Date.now() + 3600000;
+        return user.save();
+      })
+      .then((result) => {
+        res.redirect("/");
         transporter.sendMail({
           to: req.body.email,
-          from: 'automex@gmail.com',
-          subject: 'Password Reset',
+          from: "automex@gmail.com",
+          subject: "Password Reset",
           html: `
             <p>You requested a password reset </p>
             <p>Click this <a href="http://localhost:3000/rest/${token}">Link</a>To set new password </p>
-          `
-        })
-        
+          `,
+        });
       })
       .catch((err) => {
         console.log(err);
       });
   });
+};
+
+exports.getNewPassword = (req, res, next) => {
+  const token = req.params.token;
+  User.findOne({ resetToken: token, restTokenExpiration: { $gt: Date.now() } })
+    .then((result) => {
+      let message = req.flash("error");
+      if (message.length > 0) {
+        message = message[0];
+      } else {
+        message = null;
+      }
+      res.render("auth/new-password", {
+        path: "new-password",
+        pageTitle: "New Pasword",
+        errorMessage: message,
+        userId: result._id.toString()
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
