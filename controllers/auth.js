@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const sendgridTranport = require("nodemailer-sendgrid-transport");
-const {validationResult} = require('express-validator')
+const { validationResult } = require("express-validator");
 
 const User = require("../models/user");
 const user = require("../models/user");
@@ -41,6 +41,11 @@ exports.getSignup = (req, res, next) => {
     path: "/auth/signup",
     pageTitle: "Signup",
     errorMessage: message,
+    oldInput:{
+      email: "",
+      password:"",
+      confirmPassword: ""
+    }
   });
 };
 
@@ -73,47 +78,41 @@ exports.postLogin = (req, res, next) => {
 };
 
 exports.postSignup = (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, confirmPassword } = req.body;
 
-  const errors = validationResult(req)
-  
-  if(!errors.isEmpty()){
-    return res.status(422).render('auth/signup',{
-      path: '/signup',
-      pageTitle: 'Signup',
-      errorMessage: errors.array()[0].msg
-    })
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/signup", {
+      path: "/signup",
+      pageTitle: "Signup",
+      errorMessage: errors.array()[0].msg,
+      oldInput: { email, password, confirmPassword },
+    });
   }
-  User.findOne({ email: email })
-    .then((userDoc) => {
-      if (userDoc) {
-        req.flash("error", "user email already exists");
-        return res.redirect("/singup");
-      }
-      return bcrypt
-        .hash(password, 12)
-        .then((hashedPassword) => {
-          const user = new User({
-            email: email,
-            password: hashedPassword,
-            cart: { items: [] },
-          });
-          return user.save();
-        })
-        .then((result) => {
-          res.redirect("/login");
-          //  return transporter.sendMail({
-          //     to: email,
-          //     from: "shop@node-complete-guide",
-          //     subject: "Signup successfull",
-          //     html: '<h1>You sussfully signed up !</h1>'
-          //   })
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+
+  bcrypt
+    .hash(password, 12)
+    .then((hashedPassword) => {
+      const user = new User({
+        email: email,
+        password: hashedPassword,
+        cart: { items: [] },
+      });
+      return user.save();
     })
-    .catch((err) => console.log(err));
+    .then((result) => {
+      res.redirect("/login");
+      //  return transporter.sendMail({
+      //     to: email,
+      //     from: "shop@node-complete-guide",
+      //     subject: "Signup successfull",
+      //     html: '<h1>You sussfully signed up !</h1>'
+      //   })
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.postLogout = (req, res, next) => {
