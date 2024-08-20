@@ -1,25 +1,34 @@
-const express = require('express');
+const express = require("express");
+const { check } = require("express-validator");
 
-const authController = require('../controllers/auth');
+const authController = require("../controllers/auth");
 
 const router = express.Router();
 
-router.get('/login', authController.getLogin);
+router.get("/login", authController.getLogin);
 
-router.get('/signup', authController.getSignup);
+router.get("/signup", authController.getSignup);
 
-router.post('/login', authController.postLogin);
+router.post("/login", authController.postLogin);
 
-router.post('/signup', authController.postSignup);
+router.post(
+  "/signup",
+  [
+    check("email").isEmail().withMessage("Please enter a valid email"),
+    check("password",'Please enter a password with only 5 digits').isLength({ min: 5 }).isAlphanumeric(),
+  ],
 
-router.post('/logout', authController.postLogout);
+  authController.postSignup
+);
 
-router.get('/reset',authController.getReset);
+router.post("/logout", authController.postLogout);
 
-router.post('/reset',authController.postReset)
+router.get("/reset", authController.getReset);
 
-router.get('/reset/:token',authController.getNewPassword)
+router.post("/reset", authController.postReset);
 
-router.post('/new-password',authController.posNewPassword)
+router.get("/reset/:token", authController.getNewPassword);
+
+router.post("/new-password", authController.posNewPassword);
 
 module.exports = router;
