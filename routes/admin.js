@@ -31,10 +31,10 @@ router.get("/edit-product/:productId", isAuth, adminController.getEditProduct);
 router.post(
   "/edit-product",
   [
-    check("title").isAlphanumeric().isLength({ min: 3 }).trim(),
+    check("title").isString().isLength({ min: 3 }).trim(),
     check("imageUrl").isURL(),
     check("price").isFloat(),
-    check("descriptin").isLength({ min: 8, max: 400 }).trim(),
+    check("description").isLength({ min: 8, max: 400 }).trim(),
   ],
   isAuth,
   adminController.postEditProduct
