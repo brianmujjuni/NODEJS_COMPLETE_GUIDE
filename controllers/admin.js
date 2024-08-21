@@ -6,7 +6,8 @@ exports.getAddProduct = (req, res, next) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
-    hasError: false
+    hasError: false,
+    errorMessage: null
   });
 };
 
@@ -15,7 +16,7 @@ exports.postAddProduct = (req, res, next) => {
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    res.status(422).render("admin/edit-product", {
+    return res.status(422).render("admin/edit-product", {
       pageTitle: "Add Product",
       path: "/admin/edit-product",
       hasError: true,
@@ -26,6 +27,7 @@ exports.postAddProduct = (req, res, next) => {
         description,
         price,
       },
+      errorMessage: errors.array()[0].msg
     });
   }
   const product = new Product({
@@ -63,7 +65,9 @@ exports.getEditProduct = (req, res, next) => {
         path: "/admin/edit-product",
         editing: editMode,
         product: product,
-        hasError: false
+        hasError: false,
+        errorMessage: null
+
       });
     })
     .catch((err) => console.log(err));
