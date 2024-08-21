@@ -20,7 +20,7 @@ router.post(
     check("title").isAlphanumeric().isLength({ min: 3 }).trim(),
     check("imageUrl").isURL(),
     check("price").isFloat(),
-    check("descriptin").isLength({ min: 8,max: 400 }).trim()
+    check("descriptin").isLength({ min: 8, max: 400 }).trim(),
   ],
   isAuth,
   adminController.postAddProduct
@@ -28,7 +28,17 @@ router.post(
 
 router.get("/edit-product/:productId", isAuth, adminController.getEditProduct);
 
-router.post("/edit-product", isAuth, adminController.postEditProduct);
+router.post(
+  "/edit-product",
+  [
+    check("title").isAlphanumeric().isLength({ min: 3 }).trim(),
+    check("imageUrl").isURL(),
+    check("price").isFloat(),
+    check("descriptin").isLength({ min: 8, max: 400 }).trim(),
+  ],
+  isAuth,
+  adminController.postEditProduct
+);
 
 router.post("/delete-product", isAuth, adminController.postDeleteProduct);
 
