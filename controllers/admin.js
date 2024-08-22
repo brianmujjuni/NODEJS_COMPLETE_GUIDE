@@ -118,7 +118,7 @@ exports.postEditProduct = (req, res, next) => {
     product.imageUrl = updatedImageUrl;
     return product.save().then((result) => {
       res.redirect("/admin/products");
-    }).catch(error => {
+    }).catch(err => {
       const error = new Error(err)
       error.httpStatusCode = 500
       return next(error)
