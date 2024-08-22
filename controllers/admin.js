@@ -13,7 +13,7 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-  const { title, imageUrl, price, description } = req.body;
+  const { title, image, price, description } = req.body;
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
