@@ -173,8 +173,6 @@ exports.getInvoice = (req,res,next)=>{
   
   }).catch(err =>{
     return next(err)
-  }).catch(err =>{
-    return (err)
   })
  
 }
