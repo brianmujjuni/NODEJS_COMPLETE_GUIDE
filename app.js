@@ -28,7 +28,7 @@ const fileStorage = multer.diskStorage({
     cb(null,'images')
   },
   filename: (req,file,cb)=>{
-    cb(null,file.filename + '-' + file.originalname)
+    cb(null,new Date().toISOString() + '-' + file.originalname)
   }
 })
 
@@ -41,7 +41,7 @@ const authRoutes = require('./routes/auth');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(multer({dest: 'images'}).single('image'))
+app.use(multer({storage: fileStorage}).single('image'))
 
 app.use(
   session({
