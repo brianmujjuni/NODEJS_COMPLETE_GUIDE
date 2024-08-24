@@ -6,3 +6,5 @@ const deleteFile = (filePath)=>{
         }
     })
 }
+
+exports.deleteFile = deleteFile
