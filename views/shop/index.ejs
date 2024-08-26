@@ -30,11 +30,14 @@
       <% } %>
     </div>
     <section class="pagination">
-      <% if(currentPage !== 1) {%>
+      <% if(currentPage !== 1 && previousePage !== 1) {%>
       <a href="/?page=1">1</a>
       <%}%>
+        <a href="/?page=<%= currentPage %>" class="active"><%= currentPage %></a>
 
-               <a href="/?page=<%= currentPage %>" class="active"><%= currentPage %></a>
+        <%if(hasPreviousePage){%>
+            <a href="/?page=<%= previousePage %>"><%= previousePage %></a>
+            <%}%>
 
       <%if(hasNextPage){%>
       <a href="/?page=<%= nextPage %>"><%= nextPage %></a>
