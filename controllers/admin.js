@@ -194,19 +194,18 @@ exports.getProducts = (req, res, next) => {
 exports.deleteProduct = (req, res, next) => {
   const prodId = req.params.productId;
   Product.findById(prodId)
-    .then((resutl) => {
-      if (!result) {
-        return next(new Error("Product not found"));
+    .then(product => {
+      if (!product) {
+        return next(new Error('Product not found.'));
       }
-      fileHelper.deleteFile(resutl.imageUrl);
+      fileHelper.deleteFile(product.imageUrl);
       return Product.deleteOne({ _id: prodId, userId: req.user._id });
     })
     .then(() => {
-     res.status(200).json({
-      message: 'success'
-     })
+      console.log('DESTROYED PRODUCT');
+      res.status(200).json({ message: 'Success!' });
     })
-    .catch((err) => {
-      res.status(500).json({message: 'Deleting product failed'})
+    .catch(err => {
+      res.status(500).json({ message: 'Deleting product failed.' });
     });
 };
