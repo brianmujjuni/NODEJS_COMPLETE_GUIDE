@@ -267,11 +267,27 @@ exports.getCheckout = (req, res, next) => {
         total += p.quantity * p.productId.price
       })
 
+      return stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: products.map(p =>{
+          return {
+            name: p.productId.title,
+            description: p.productId.description,
+            amount: p.productId.price * 100,
+            currency: 'usd',
+            quantity: p.quantity
+          }
+        }),
+        success_url: req.protocal + '://' + req.get('host') + '/checkout/success',
+        cancel_url: req.protocal + '://' + req.get('host') + '/checkout/cancel'
+      })    
+    }).then(session =>{
       res.render("shop/checkout", {
         path: "/checkout",
         pageTitle: "Checkout",
         products: products,
-        totalSum: total
+        totalSum: total,
+        sessionId: session.id
       });
     })
     .catch((err) => {
