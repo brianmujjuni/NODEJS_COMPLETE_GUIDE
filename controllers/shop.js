@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-
+const stripe = require('stripe')('pk_test_51PsTB804H81FcuNkNjRVoJYrUO7tDedVCE36R7e4oMZ8UydmFqwM8EYk1jMMECwuyPGgDzqSGzmC2LlSbwB36A0j003HOblS2j')
 const PDFDocument = require("pdfkit");
 
 const Product = require("../models/product");
@@ -254,13 +254,14 @@ exports.getInvoice = (req, res, next) => {
 };
 
 exports.getCheckout = (req, res, next) => {
+  let products
+  let total = 0
+
   req.user
     .populate("cart.items.productId")
     // .execPopulate()
     .then((user) => {
-      const products = user.cart.items;
-
-      let total = 0
+      products = user.cart.items;
 
       products.forEach(p =>{
         total += p.quantity * p.productId.price
