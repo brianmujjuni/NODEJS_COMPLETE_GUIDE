@@ -4,6 +4,7 @@ const fileHelper = require("../uitl/file");
 const { validationResult } = require("express-validator");
 
 const Product = require("../models/product");
+const { path } = require("pdfkit");
 
 exports.getAddProduct = (req, res, next) => {
   res.render("admin/edit-product", {
@@ -177,7 +178,7 @@ exports.getProducts = (req, res, next) => {
     // .select('title price -_id')
     // .populate('userId', 'name')
     .then((products) => {
-      console.log(products);
+      
       res.render("admin/products", {
         prods: products,
         pageTitle: "Admin Products",
@@ -210,4 +211,3 @@ exports.deleteProduct = (req, res, next) => {
     });
 };
 
-exports.getCheckout = (req, res, next) => {};
